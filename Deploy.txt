@@ -1,0 +1,75 @@
+..........how to deploy Vite React project via Github? considering it is a frontend project.
+step1. keep your vite react folder ready.
+step2. create a repo, and link it with the folder
+step3. wirte ( base: "/repo name/" ) in the vit.config.js below ( plugin: [reat()], )
+step4. in the main vite folder create: .github(foloder)-->workflow(folder)--->deploy.yml(file)
+
+step5. past the following code in deploy.yml file.
+--------------------------------------------
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload production-ready build files
+        uses: actions/upload-artifact@v3
+        with:
+          name: production-files
+          path: ./dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: production-files
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+--------------------------------------------
+
+step6. in terminal: 
+git add .
+git commit -m "add:deploy workflow"
+git push 
+
+step7. in github repo --->setting--->action----- >general: in workflow permissions-> select: read  and write permission then save it.
+step8. in github repo --->actions (something start loading)
+note if it's failed to load re-run the failed file again.
+
+step9. after loading done, in github repo ----> pages----->brach : change none to gh-pages, then save it.(then again see in the action : something is starting loading again.)
+step10. ones this is the pages , their is a url for the deploy project, congrats.
+
+step11. now whenever you make any changes it will automatically deploy it, just push code in github.
+
+
+
