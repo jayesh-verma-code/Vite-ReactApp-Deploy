@@ -4,7 +4,7 @@ step2. create a repo, and link it with the folder
 step3. wirte ( base: "/repo name/" ) in the vit.config.js below ( plugin: [reat()], )
 step4. in the main vite folder create: .github(foloder)-->workflow(folder)--->deploy.yml(file)
 
-step5. past the following code in deploy.yml file.
+step5. paste the following code in deploy.yml file.
 --------------------------------------------
 name: Deploy
 
